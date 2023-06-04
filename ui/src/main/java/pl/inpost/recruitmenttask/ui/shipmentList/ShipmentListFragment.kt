@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.databinding.FragmentShipmentListBinding
 import pl.inpost.recruitmenttask.ui.databinding.ShipmentItemBinding
+import pl.inpost.recruitmenttask.ui.shipmentList.entities.UiShipmentNetwork
 
 @AndroidEntryPoint
 class ShipmentListFragment : Fragment() {
@@ -25,20 +27,20 @@ class ShipmentListFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentShipmentListBinding.inflate(inflater, container, false)
         return requireNotNull(binding).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.viewState.observe(requireActivity()) { shipments ->
-            shipments.forEach { shipmentNetwork ->
-                val shipmentItemBinding = ShipmentItemBinding.inflate(layoutInflater).apply {
-                    shipmentNumber.text = shipmentNetwork.number
-                    status.setText(shipmentNetwork.status)
-                }
-                binding?.scrollViewContent?.addView(shipmentItemBinding.root)
+        lifecycleScope.launchWhenStarted {
+            viewModel.viewState.collect { shipments ->
+                shipments.forEach(::bind)
             }
         }
     }
@@ -46,6 +48,14 @@ class ShipmentListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    private fun bind(uiShipmentNetwork: UiShipmentNetwork) {
+        val shipmentItemBinding = ShipmentItemBinding.inflate(layoutInflater).apply {
+            shipmentNumber.text = uiShipmentNetwork.number
+            status.setText(uiShipmentNetwork.status)
+        }
+        binding?.scrollViewContent?.addView(shipmentItemBinding.root)
     }
 
     companion object {

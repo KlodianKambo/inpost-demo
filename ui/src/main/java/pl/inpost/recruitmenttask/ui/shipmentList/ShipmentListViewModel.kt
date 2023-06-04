@@ -1,20 +1,17 @@
 package pl.inpost.recruitmenttask.ui.shipmentList
 
-import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import pl.inpost.recruitmenttask.domain.entities.*
 import pl.inpost.recruitmenttask.domain.entities.ShipmentNetwork
 import pl.inpost.recruitmenttask.domain.usecases.GetShipmentList
-import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.shipmentList.entities.*
-import pl.inpost.recruitmenttask.util.setState
-import java.time.ZonedDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +19,8 @@ class ShipmentListViewModel @Inject constructor(
     private val getShipmentList: GetShipmentList
 ) : ViewModel() {
 
-    private val mutableViewState = MutableLiveData<List<UiShipmentNetwork>>(emptyList())
-    val viewState: LiveData<List<UiShipmentNetwork>> = mutableViewState
+    private val mutableViewState = MutableSharedFlow<List<UiShipmentNetwork>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val viewState: Flow<List<UiShipmentNetwork>> = mutableViewState
 
     init {
         refreshData()
@@ -32,7 +29,7 @@ class ShipmentListViewModel @Inject constructor(
     private fun refreshData() {
         viewModelScope.launch(Dispatchers.Main) {
             val shipments = getShipmentList().map { it.toUiShipmentNetwork() }
-            mutableViewState.setState { shipments }
+            mutableViewState.emit(shipments)
         }
     }
 
