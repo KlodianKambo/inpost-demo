@@ -1,5 +1,7 @@
-package pl.inpost.recruitmenttask.data.network.model
+package pl.inpost.recruitmenttask.ui.shipmentList.entities
 
+import androidx.annotation.StringRes
+import pl.inpost.recruitmenttask.ui.R
 
 /**
  * Order of statuses
@@ -18,8 +20,8 @@ package pl.inpost.recruitmenttask.data.network.model
  * 13. PICKUP_TIME_EXPIRED
  */
 
-/*
-enum class ShipmentStatus(
+
+enum class UiShipmentStatus(
     @StringRes val nameRes: Int
 ) {
     ADOPTED_AT_SORTING_CENTER(R.string.status_adopted_at_sorting_center),
@@ -34,6 +36,6 @@ enum class ShipmentStatus(
     OUT_FOR_DELIVERY(R.string.status_out_for_delivery),
     PICKUP_TIME_EXPIRED(R.string.status_pickup_time_expired),
     READY_TO_PICKUP(R.string.status_ready_to_pickup),
-    RETURNED_TO_SENDER(R.string.status_returned_to_sender);
+    RETURNED_TO_SENDER(R.string.status_returned_to_sender),
+    NOT_READY(R.string.status_not_ready);
 }
-*/

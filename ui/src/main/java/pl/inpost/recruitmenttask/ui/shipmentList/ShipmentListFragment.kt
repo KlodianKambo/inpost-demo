@@ -36,7 +36,7 @@ class ShipmentListFragment : Fragment() {
             shipments.forEach { shipmentNetwork ->
                 val shipmentItemBinding = ShipmentItemBinding.inflate(layoutInflater).apply {
                     shipmentNumber.text = shipmentNetwork.number
-                    status.text = shipmentNetwork.status.name
+                    status.setText(shipmentNetwork.status)
                 }
                 binding?.scrollViewContent?.addView(shipmentItemBinding.root)
             }
