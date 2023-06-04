@@ -1,5 +1,7 @@
 package pl.inpost.recruitmenttask.data.network.model.dto
 
+import com.squareup.moshi.JsonClass
+
 /**
  * @param manualArchive - shipment can be manually (gesture) archived
  * @param delete - shipment can be manually deleted
@@ -8,6 +10,7 @@ package pl.inpost.recruitmenttask.data.network.model.dto
  * @param expandAvizo - shipment time to pick up can be expanded - show button
  * @param endOfWeekCollection - shipment will be available to pick up over the weekend - change colors
  */
+@JsonClass(generateAdapter = true)
 internal data class OperationsNetworkDto(
     val manualArchive: Boolean,
     val delete: Boolean,

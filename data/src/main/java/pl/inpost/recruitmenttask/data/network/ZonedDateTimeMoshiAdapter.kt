@@ -8,13 +8,13 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @Reusable
-internal class ApiTypeAdapter @Inject constructor() {
+internal class ZonedDateTimeMoshiAdapter @Inject constructor() {
 
     private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @FromJson
     fun toZonedDateTime(value: String?): ZonedDateTime? = value?.let {
-        formatter.parse(it, ZonedDateTime::from)
+        formatter.parse(value, ZonedDateTime::from)
     }
 
     @ToJson
