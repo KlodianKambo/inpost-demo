@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextHint">
+        <item name="fontFamily">@font/montserrat_semibold</item>
+        <item name="android:textColor">@color/text_hint</item>
+    </style>
+
+    <style name="TextValue">
+        <item name="fontFamily">@font/montserrat_medium</item>
+        <item name="android:textColor">@color/text_value</item>
+    </style>
+
+    <style name="TextValue700">
+        <item name="fontFamily">@font/montserrat_bold</item>
+        <item name="android:textColor">@color/text_value</item>
+    </style>
+</resources>

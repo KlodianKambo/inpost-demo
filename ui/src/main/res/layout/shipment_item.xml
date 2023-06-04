@@ -1,29 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/size176"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/package_number_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="#E6E0E0"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginStart="@dimen/size20"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/nr_przesy_ki"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/package_number_value"
+        style="@style/TextValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/package_number_text"
+        app:layout_constraintTop_toBottomOf="@+id/package_number_text"
+        tools:text="1234553459359043" />
+
+
+    <ImageView
+        android:id="@+id/delivery_status_iv"
+        android:layout_width="@dimen/size50"
+        android:layout_height="@dimen/size50"
+        android:layout_marginTop="@dimen/size16"
+        android:layout_marginEnd="@dimen/size20"
+        android:src="@drawable/ic_courrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Missing specifications for this feature
+   1. when it's displayed
+   2. what is pn for ?
+   3. what date is the value referring to ? expiryDate, storedDate or pickUpDate ?
+   hidden for now
+   start -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/delivery_status_iv"
+        app:layout_constraintTop_toTopOf="@+id/status_text">
 
         <TextView
-            android:id="@+id/shipmentNumber"
-            android:layout_width="match_parent"
+            android:id="@+id/received_value"
+            style="@style/TextHint"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="1234553459359043" />
+            android:textAllCaps="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Order" />
 
         <TextView
-            android:id="@+id/status"
-            android:layout_width="match_parent"
+            android:id="@+id/received_date_value"
+            style="@style/TextValue700"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            tools:text="Gotowa do odbioru" />
-    </LinearLayout>
-</LinearLayout>
+            app:layout_constraintEnd_toEndOf="@+id/received_value"
+            app:layout_constraintTop_toBottomOf="@+id/received_value"
+            tools:text="Order" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- end -->
+
+    <TextView
+        android:id="@+id/status_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/status"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/package_number_value"
+        app:layout_constraintTop_toBottomOf="@+id/package_number_value" />
+
+    <TextView
+        android:id="@+id/status_value"
+        style="@style/TextValue700"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size20"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/status_text"
+        app:layout_constraintTop_toBottomOf="@+id/status_text"
+        tools:text="Gotowa do odbioru" />
+
+    <TextView
+        android:id="@+id/sender_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/nadawca"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/status_value"
+        app:layout_constraintTop_toBottomOf="@+id/status_value" />
+
+    <TextView
+        android:id="@+id/sender_value"
+        style="@style/TextValue700"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size20"
+        app:layout_constraintEnd_toStartOf="@+id/more"
+        app:layout_constraintStart_toStartOf="@+id/status_text"
+        app:layout_constraintTop_toBottomOf="@+id/sender_text"
+        tools:text="Gotowa do odbioru" />
+
+    <TextView
+        android:id="@+id/more"
+        style="@style/TextValue700"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size6"
+        android:text="@string/more"
+        app:layout_constraintEnd_toStartOf="@+id/more_iv"
+        app:layout_constraintTop_toBottomOf="@+id/sender_text" />
+
+    <ImageView
+        android:id="@+id/more_iv"
+        android:layout_width="@dimen/size20"
+        android:layout_height="@dimen/size20"
+        android:layout_marginEnd="@dimen/size20"
+        android:src="@drawable/ic_arrow_yellow"
+        app:layout_constraintBottom_toBottomOf="@+id/sender_value"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

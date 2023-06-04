@@ -15,4 +15,8 @@
     <string name="status_ready_to_pickup">Gotowa do odbioru</string>
     <string name="status_returned_to_sender">Zwrot do Nadawcy</string>
     <string name="status_not_ready">gotowy</string>
+    <string name="more">więcej</string>
+    <string name="nr_przesy_ki">Nr Przesylki</string>
+    <string name="status">Status</string>
+    <string name="nadawca">Nadawca</string>
 </resources>

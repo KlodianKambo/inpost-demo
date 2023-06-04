@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_hint">#929497</color>
+    <color name="text_value">#404041</color>
+    <color name="list_bg">#F2F2F2</color>
+</resources>

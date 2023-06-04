@@ -13,7 +13,9 @@ internal class ApiTypeAdapter @Inject constructor() {
     private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     @FromJson
-    fun toZonedDateTime(value: String): ZonedDateTime = formatter.parse(value, ZonedDateTime::from)
+    fun toZonedDateTime(value: String?): ZonedDateTime? = value?.let {
+        formatter.parse(it, ZonedDateTime::from)
+    }
 
     @ToJson
     fun fromZonedDateTime(date: ZonedDateTime?): String? = date?.format(formatter)

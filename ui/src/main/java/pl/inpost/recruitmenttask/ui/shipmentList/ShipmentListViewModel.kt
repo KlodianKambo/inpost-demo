@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import pl.inpost.recruitmenttask.domain.entities.*
-import pl.inpost.recruitmenttask.domain.entities.ShipmentNetwork
 import pl.inpost.recruitmenttask.domain.usecases.GetShipmentList
+import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.shipmentList.entities.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +21,13 @@ class ShipmentListViewModel @Inject constructor(
     private val getShipmentList: GetShipmentList
 ) : ViewModel() {
 
-    private val mutableViewState = MutableSharedFlow<List<UiShipmentNetwork>>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    // TODO the day and the month are to be formatted based on the locale, e.g. for the US and EN
+    private val dateFormatter = SimpleDateFormat("| dd.MM.yy | hh.mm", Locale.ROOT)
+
+    private val mutableViewState = MutableSharedFlow<List<UiShipmentNetwork>>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val viewState: Flow<List<UiShipmentNetwork>> = mutableViewState
 
     init {
@@ -41,23 +49,23 @@ class ShipmentListViewModel @Inject constructor(
     private fun ShipmentNetwork.toUiShipmentNetwork(): UiShipmentNetwork {
         return UiShipmentNetwork(
             number = number,
-            shipmentType = shipmentType.toUiShipmentType(),
+            shipmentTypeIconRes = shipmentType.getShipmentTypeImageResId(),
             status = status.getShipmenStatusResId(),
             eventLog = eventLog.map { it.toUiEventLogNetwork() },
             openCode = openCode,
-            expiryDate = expiryDate,
-            storedDate = storedDate,
-            pickUpDate = pickUpDate,
+            // TODO use a string pattern
+            //  missing the meaning and the logic of "pn."
+            receivedFormattedDate = storedDate?.let { "pn. " + dateFormatter.format(Date.from(it.toInstant())) },
             receiver = receiver?.toUiCustomerNetwork(),
             sender = sender?.toUiCustomerNetwork(),
             operations = operations.toUiOperationsNetwork()
         )
     }
 
-    private fun ShipmentType.toUiShipmentType(): UiShipmentType {
+    private fun ShipmentType.getShipmentTypeImageResId(): Int {
         return when (this) {
-            ShipmentType.PARCEL_LOCKER -> UiShipmentType.PARCEL_LOCKER
-            ShipmentType.COURIER -> UiShipmentType.COURIER
+            ShipmentType.PARCEL_LOCKER -> R.drawable.ic_cell
+            ShipmentType.COURIER -> R.drawable.ic_courrier
         }
     }
 

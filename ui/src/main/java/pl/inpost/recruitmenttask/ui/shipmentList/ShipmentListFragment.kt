@@ -52,8 +52,18 @@ class ShipmentListFragment : Fragment() {
 
     private fun bind(uiShipmentNetwork: UiShipmentNetwork) {
         val shipmentItemBinding = ShipmentItemBinding.inflate(layoutInflater).apply {
-            shipmentNumber.text = uiShipmentNetwork.number
-            status.setText(uiShipmentNetwork.status)
+            senderValue.text = uiShipmentNetwork.sender?.email
+            deliveryStatusIv.setImageResource(uiShipmentNetwork.shipmentTypeIconRes)
+
+            uiShipmentNetwork.receivedFormattedDate?.let {
+                receivedDateValue.text = it
+                // TODO this is a semi-mocked logic as we are missing some
+                //  specifications here
+                receivedValue.setText(uiShipmentNetwork.status)
+            }
+
+            packageNumberValue.text = uiShipmentNetwork.number
+            statusValue.setText(uiShipmentNetwork.status)
         }
         binding?.scrollViewContent?.addView(shipmentItemBinding.root)
     }
