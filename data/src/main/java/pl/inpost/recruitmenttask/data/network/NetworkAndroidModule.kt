@@ -1,6 +1,7 @@
 package pl.inpost.recruitmenttask.data.network
 
 import android.content.Context
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +15,12 @@ import pl.inpost.recruitmenttask.domain.repositories.ShipmentRepository
 internal class NetworkAndroidModule {
 
     @Provides
-    fun shipmentApi(@ApplicationContext context: Context, apiTypeAdapter: ApiTypeAdapter): ShipmentRepository = MockShipmentApi(context, apiTypeAdapter)
+    fun shipmentApi(@ApplicationContext context: Context, moshi: Moshi): ShipmentRepository = MockShipmentApi(context, moshi)
+
+    @Provides
+    fun provideMoshi(zonedDateTimeMoshiAdapter: ZonedDateTimeMoshiAdapter) : Moshi {
+        return Moshi.Builder()
+            .add(zonedDateTimeMoshiAdapter)
+            .build()
+    }
 }
