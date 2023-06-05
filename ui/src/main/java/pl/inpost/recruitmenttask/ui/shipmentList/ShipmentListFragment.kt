@@ -2,6 +2,7 @@ package pl.inpost.recruitmenttask.ui.shipmentList
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -38,10 +39,24 @@ class ShipmentListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.refreshData()
+
         lifecycleScope.launchWhenStarted {
             viewModel.viewState.collect { shipments ->
+
+                binding?.scrollViewContent?.removeAllViews()
+
+                binding?.loading?.isVisible = false
+
+                binding?.swipeRefresh?.isRefreshing = false
                 shipments.forEach(::bind)
             }
+        }
+
+        binding?.swipeRefresh?.setOnRefreshListener {
+            binding?.loading?.isVisible = true
+            viewModel.refreshData()
         }
     }
 
