@@ -34,7 +34,7 @@ class ShipmentListViewModel @Inject constructor(
         refreshData()
     }
 
-    private fun refreshData() {
+    fun refreshData() {
         viewModelScope.launch(Dispatchers.Main) {
             val shipments = getShipmentList().map { it.toUiShipmentNetwork() }
             mutableViewState.emit(shipments)
