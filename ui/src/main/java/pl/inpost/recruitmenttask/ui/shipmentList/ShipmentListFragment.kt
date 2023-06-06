@@ -2,15 +2,17 @@ package pl.inpost.recruitmenttask.ui.shipmentList
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.databinding.FragmentShipmentListBinding
-import pl.inpost.recruitmenttask.ui.databinding.ShipmentItemBinding
-import pl.inpost.recruitmenttask.ui.shipmentList.entities.UiShipmentNetwork
+import pl.inpost.recruitmenttask.ui.shipmentList.adapter.ShipmentAdapter
+import pl.inpost.recruitmenttask.ui.shipmentList.adapter.ShipmentItemDecorator
 
 @AndroidEntryPoint
 class ShipmentListFragment : Fragment() {
@@ -42,13 +44,13 @@ class ShipmentListFragment : Fragment() {
 
         viewModel.refreshData()
 
+        val adapter = ShipmentAdapter {
+            viewModel.archive(it.number)
+        }
+
         lifecycleScope.launchWhenStarted {
             viewModel.viewState.collect { shipments ->
-
-                binding?.scrollViewContent?.removeAllViews()
-
-
-                shipments.forEach(::bind)
+                adapter.submitList(shipments)
             }
         }
 
@@ -62,6 +64,17 @@ class ShipmentListFragment : Fragment() {
         binding?.swipeRefresh?.setOnRefreshListener {
             viewModel.refreshData()
         }
+
+        binding?.recyclerView?.run {
+            addItemDecoration(
+                ShipmentItemDecorator(
+                    20,
+                    ContextCompat.getColor(requireContext(), R.color.separator_bg)
+                )
+            )
+            layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = adapter
+        }
     }
 
     override fun onDestroyView() {
@@ -69,27 +82,6 @@ class ShipmentListFragment : Fragment() {
         binding = null
     }
 
-    private fun bind(uiShipmentNetwork: UiShipmentNetwork) {
-        val shipmentItemBinding = ShipmentItemBinding.inflate(layoutInflater).apply {
-            senderValue.text = uiShipmentNetwork.sender?.email
-            deliveryStatusIv.setImageResource(uiShipmentNetwork.shipmentTypeIconRes)
-
-            uiShipmentNetwork.receivedFormattedDate?.let {
-                receivedDateValue.text = it
-                // TODO this is a semi-mocked logic as we are missing some
-                //  specifications here
-                receivedValue.setText(uiShipmentNetwork.status)
-            }
-
-            packageNumberValue.text = uiShipmentNetwork.number
-            statusValue.setText(uiShipmentNetwork.status)
-
-            archive.setOnClickListener {
-                viewModel.archive(uiShipmentNetwork.number)
-            }
-        }
-        binding?.scrollViewContent?.addView(shipmentItemBinding.root)
-    }
 
     companion object {
         fun newInstance() = ShipmentListFragment()
