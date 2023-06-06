@@ -1,8 +1,6 @@
-package pl.inpost.recruitmenttask.data.network.model.localstorage
+package pl.inpost.recruitmenttask.data.network.model.roomentities
 
 import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 internal data class ShipmentWithEventLogs(

@@ -1,9 +1,9 @@
 package pl.inpost.recruitmenttask.data.network.daos
 
 import androidx.room.*
-import pl.inpost.recruitmenttask.data.network.model.localstorage.EventLogEntity
-import pl.inpost.recruitmenttask.data.network.model.localstorage.ShipmentEntity
-import pl.inpost.recruitmenttask.data.network.model.localstorage.ShipmentWithEventLogs
+import pl.inpost.recruitmenttask.data.network.model.roomentities.EventLogEntity
+import pl.inpost.recruitmenttask.data.network.model.roomentities.ShipmentEntity
+import pl.inpost.recruitmenttask.data.network.model.roomentities.ShipmentWithEventLogs
 
 @Dao
 internal interface ShipmentDao {

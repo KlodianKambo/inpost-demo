@@ -1,7 +1,7 @@
 package pl.inpost.recruitmenttask.data.network.repositories
 
 import pl.inpost.recruitmenttask.data.network.daos.ShipmentDao
-import pl.inpost.recruitmenttask.data.network.model.localstorage.*
+import pl.inpost.recruitmenttask.data.network.model.roomentities.*
 import pl.inpost.recruitmenttask.domain.entities.Customer
 import pl.inpost.recruitmenttask.domain.entities.EventLog
 import pl.inpost.recruitmenttask.domain.entities.Operations
@@ -44,7 +44,8 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
             pickUpDate = this.shipment.pickUpDate,
             receiver = this.shipment.receiver?.toCustomerNetwork(),
             sender = this.shipment.sender?.toCustomerNetwork(),
-            operations = this.shipment.operations.toOperationsNetwork()
+            operations = this.shipment.operations.toOperationsNetwork(),
+            archived = this.shipment.archived
         )
     }
 
@@ -82,7 +83,8 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
             pickUpDate = pickUpDate,
             receiver = receiver?.toCustomerNetwork(),
             sender = sender?.toCustomerNetwork(),
-            operations = operations.toOperationsNetwork()
+            operations = operations.toOperationsNetwork(),
+            archived = archived
         )
     }
 

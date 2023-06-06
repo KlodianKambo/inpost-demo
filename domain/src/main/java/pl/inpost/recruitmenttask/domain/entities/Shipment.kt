@@ -13,5 +13,6 @@ data class Shipment(
     val pickUpDate: ZonedDateTime?,
     val receiver: Customer?,
     val sender: Customer?,
-    val operations: Operations
+    val operations: Operations,
+    val archived: Boolean
 )

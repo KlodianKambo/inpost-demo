@@ -1,4 +1,4 @@
-package pl.inpost.recruitmenttask.data.network
+package pl.inpost.recruitmenttask.data.network.localstorage
 
 import androidx.room.TypeConverter
 import java.time.ZonedDateTime
