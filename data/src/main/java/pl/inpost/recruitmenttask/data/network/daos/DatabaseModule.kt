@@ -6,7 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import pl.inpost.recruitmenttask.data.network.AppDatabase
+import pl.inpost.recruitmenttask.data.network.localstorage.AppDatabase
+import pl.inpost.recruitmenttask.data.network.migration_1_2
 import javax.inject.Singleton
 
 @Module
@@ -20,7 +21,8 @@ internal object DatabaseModule {
             application,
             AppDatabase::class.java,
             "inpost-app-database"
-        ).build()
+        ).addMigrations(migration_1_2)
+            .build()
     }
 
     @Provides

@@ -1,7 +1,9 @@
 package pl.inpost.recruitmenttask.data.network.repositories
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import pl.inpost.recruitmenttask.data.network.daos.ShipmentDao
-import pl.inpost.recruitmenttask.data.network.model.localstorage.*
+import pl.inpost.recruitmenttask.data.network.model.roomentities.*
 import pl.inpost.recruitmenttask.domain.entities.Customer
 import pl.inpost.recruitmenttask.domain.entities.EventLog
 import pl.inpost.recruitmenttask.domain.entities.Operations
@@ -14,52 +16,65 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
 ) : ShipmentLocalStorage {
 
     override suspend fun insertList(shipmentList: List<Shipment>) {
-
         shipmentList.map { shipmentNetwork ->
-            val shipmentEntity = shipmentNetwork.toShipmentNetwork()
+            val shipmentEntity = shipmentNetwork.toShipmentEntity()
             shipmentDao.insertShipment(shipmentEntity)
             shipmentNetwork.eventLog
-                .map { it.toEventLogNetwork(shipmentNetwork.number) }
+                .map { it.toEventLogEntity(shipmentNetwork.number) }
                 .also { shipmentDao.insertEventLogs(it) }
         }
     }
 
-    override suspend fun get(): List<Shipment> {
-        return shipmentDao.getAllShipments().map { it.toShipmentNetwork() }
+    override fun getAllShipments(archived: Boolean): Flow<List<Shipment>> {
+        return shipmentDao.getAllShipments(archived)
+            .map { it.map { it.toShipment() } }
+    }
+
+    override suspend fun update(shipment: Shipment) {
+        shipmentDao.updateShipment(shipment.toShipmentEntity())
+    }
+
+    override suspend fun count(): Int {
+        return shipmentDao.getShipmentCount()
+    }
+
+    override suspend fun getShipment(number: String): Shipment? {
+        return shipmentDao.getShipmentByNumber(number)?.toShipment()
     }
 
 
     /***********************************************************************************************
      * Private
      **********************************************************************************************/
-    private fun ShipmentWithEventLogs.toShipmentNetwork(): Shipment {
+    private fun ShipmentWithEventLogs.toShipment(): Shipment {
         return Shipment(
             number = this.shipment.number,
             shipmentType = this.shipment.shipmentType,
             status = this.shipment.status,
-            eventLog = this.eventLogs.map { it.toEventLogNetwork() },
+            eventLog = this.eventLogs.map { it.toEventLog() },
             openCode = this.shipment.openCode,
             expiryDate = this.shipment.expiryDate,
             storedDate = this.shipment.storedDate,
             pickUpDate = this.shipment.pickUpDate,
-            receiver = this.shipment.receiver?.toCustomerNetwork(),
-            sender = this.shipment.sender?.toCustomerNetwork(),
-            operations = this.shipment.operations.toOperationsNetwork()
+            receiver = this.shipment.receiver?.toCustomer(),
+            sender = this.shipment.sender?.toCustomer(),
+            operations = this.shipment.operations.toOperations(),
+            archived = this.shipment.archived
         )
     }
 
-    private fun EventLogEntity.toEventLogNetwork(): EventLog {
+    private fun EventLogEntity.toEventLog(): EventLog {
         return EventLog(
             name = name,
             date = date
         )
     }
 
-    private fun CustomerEntity.toCustomerNetwork(): Customer {
+    private fun CustomerEntity.toCustomer(): Customer {
         return Customer(email, phoneNumber, name)
     }
 
-    private fun OperationsEntity.toOperationsNetwork(): Operations {
+    private fun OperationsEntity.toOperations(): Operations {
         return Operations(
             manualArchive = manualArchive,
             delete = delete,
@@ -71,7 +86,7 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
     }
 
 
-    private fun Shipment.toShipmentNetwork(): ShipmentEntity {
+    private fun Shipment.toShipmentEntity(): ShipmentEntity {
         return ShipmentEntity(
             number = number,
             shipmentType = shipmentType,
@@ -80,13 +95,14 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
             expiryDate = expiryDate,
             storedDate = storedDate,
             pickUpDate = pickUpDate,
-            receiver = receiver?.toCustomerNetwork(),
-            sender = sender?.toCustomerNetwork(),
-            operations = operations.toOperationsNetwork()
+            receiver = receiver?.toCustomerEntity(),
+            sender = sender?.toCustomerEntity(),
+            operations = operations.toOperationsEntity(),
+            archived = archived
         )
     }
 
-    private fun EventLog.toEventLogNetwork(shipmentNumber: String): EventLogEntity {
+    private fun EventLog.toEventLogEntity(shipmentNumber: String): EventLogEntity {
         return EventLogEntity(
             shipmentNumber = shipmentNumber,
             name = name,
@@ -94,13 +110,13 @@ internal class ShipmentLocalStorageImpl @Inject constructor(
         )
     }
 
-    private fun Customer.toCustomerNetwork(): CustomerEntity {
+    private fun Customer.toCustomerEntity(): CustomerEntity {
         return CustomerEntity(
             email = email, phoneNumber = phoneNumber, name = name
         )
     }
 
-    private fun Operations.toOperationsNetwork(): OperationsEntity {
+    private fun Operations.toOperationsEntity(): OperationsEntity {
         return OperationsEntity(
             manualArchive = manualArchive,
             delete = delete,

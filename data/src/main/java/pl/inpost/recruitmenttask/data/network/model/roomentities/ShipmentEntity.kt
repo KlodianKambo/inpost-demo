@@ -1,9 +1,8 @@
-package pl.inpost.recruitmenttask.data.network.model.localstorage
+package pl.inpost.recruitmenttask.data.network.model.roomentities
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import pl.inpost.recruitmenttask.domain.entities.ShipmentStatus
 import pl.inpost.recruitmenttask.domain.entities.ShipmentType
 import java.time.ZonedDateTime
@@ -19,5 +18,6 @@ internal data class ShipmentEntity(
     val pickUpDate: ZonedDateTime?,
     @Embedded(prefix = "receiver_") val receiver: CustomerEntity?,
     @Embedded(prefix = "sender_") val sender: CustomerEntity?,
-    @Embedded(prefix = "operations_") val operations: OperationsEntity
+    @Embedded(prefix = "operations_") val operations: OperationsEntity,
+    val archived: Boolean
 )

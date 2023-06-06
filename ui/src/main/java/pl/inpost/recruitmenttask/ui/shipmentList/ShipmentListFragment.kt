@@ -47,15 +47,19 @@ class ShipmentListFragment : Fragment() {
 
                 binding?.scrollViewContent?.removeAllViews()
 
-                binding?.loading?.isVisible = false
 
-                binding?.swipeRefresh?.isRefreshing = false
                 shipments.forEach(::bind)
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.isLoading.collect {
+                binding?.loading?.isVisible = it
+                binding?.swipeRefresh?.isRefreshing = it
+            }
+        }
+
         binding?.swipeRefresh?.setOnRefreshListener {
-            binding?.loading?.isVisible = true
             viewModel.refreshData()
         }
     }
@@ -79,6 +83,10 @@ class ShipmentListFragment : Fragment() {
 
             packageNumberValue.text = uiShipmentNetwork.number
             statusValue.setText(uiShipmentNetwork.status)
+
+            archive.setOnClickListener {
+                viewModel.archive(uiShipmentNetwork.number)
+            }
         }
         binding?.scrollViewContent?.addView(shipmentItemBinding.root)
     }

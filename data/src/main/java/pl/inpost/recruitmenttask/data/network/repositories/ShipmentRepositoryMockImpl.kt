@@ -31,10 +31,10 @@ internal class ShipmentRepositoryMockImpl(
 
     override suspend fun getShipments(): List<Shipment> {
         delay(1000)
-        return response.shipments.map { it.toShipmentNetwork() }
+        return response.shipments.map { it.toShipmentNetwork(archived = false) }
     }
 
-    private fun ShipmentDto.toShipmentNetwork(): Shipment {
+    private fun ShipmentDto.toShipmentNetwork(archived: Boolean): Shipment {
         return Shipment(
             number = number,
             shipmentType = shipmentType.toShipmentTypeDto(),
@@ -46,7 +46,8 @@ internal class ShipmentRepositoryMockImpl(
             pickUpDate = pickUpDate,
             receiver = receiver?.toCustomerNetwork(),
             sender = sender?.toCustomerNetwork(),
-            operations = operations.toOperationsNetwork()
+            operations = operations.toOperationsNetwork(),
+            archived = archived
         )
     }
 
@@ -110,7 +111,8 @@ private fun mockShipmentNetwork(
     openCode: String? = null,
     expireDate: ZonedDateTime? = null,
     storedDate: ZonedDateTime? = null,
-    pickupDate: ZonedDateTime? = null
+    pickupDate: ZonedDateTime? = null,
+    archived: Boolean = false
 ) = Shipment(
     number = number,
     shipmentType = type,
@@ -122,7 +124,8 @@ private fun mockShipmentNetwork(
     pickUpDate = pickupDate,
     receiver = receiver,
     sender = sender,
-    operations = operations
+    operations = operations,
+    archived = archived
 )
 
 private fun mockCustomerNetwork(

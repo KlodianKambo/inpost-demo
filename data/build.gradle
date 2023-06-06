@@ -14,6 +14,19 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
+    }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 
     buildTypes {
@@ -34,6 +47,8 @@ android {
 
 dependencies {
 
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+
     implementation project(":domain")
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -52,4 +67,24 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.1"
     kapt 'androidx.room:room-compiler:2.5.1'
 
+    androidTestImplementation "androidx.room:room-testing:2.5.1"
+
+}
+
+class RoomSchemaArgProvider implements CommandLineArgumentProvider {
+
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    File schemaDir
+
+    RoomSchemaArgProvider(File schemaDir) {
+        this.schemaDir = schemaDir
+    }
+
+    @Override
+    Iterable<String> asArguments() {
+        // Note: If you're using KSP, change the line below to return
+        // ["room.schemaLocation=${schemaDir.path}".toString()].
+        return ["-Aroom.schemaLocation=${schemaDir.path}".toString()]
+    }
 }
