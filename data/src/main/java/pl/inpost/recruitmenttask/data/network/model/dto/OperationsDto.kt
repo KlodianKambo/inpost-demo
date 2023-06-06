@@ -11,7 +11,7 @@ import com.squareup.moshi.JsonClass
  * @param endOfWeekCollection - shipment will be available to pick up over the weekend - change colors
  */
 @JsonClass(generateAdapter = true)
-internal data class OperationsNetworkDto(
+internal data class OperationsDto(
     val manualArchive: Boolean,
     val delete: Boolean,
     val collect: Boolean,

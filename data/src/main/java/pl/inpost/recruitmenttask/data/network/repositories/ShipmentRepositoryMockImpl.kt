@@ -1,18 +1,23 @@
-package pl.inpost.recruitmenttask.data.network.api
+package pl.inpost.recruitmenttask.data.network.repositories
 
 import android.content.Context
 import com.squareup.moshi.Moshi
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import pl.inpost.recruitmenttask.data.R
-import pl.inpost.recruitmenttask.data.network.model.ShipmentsResponse
-import pl.inpost.recruitmenttask.data.network.model.dto.*
+import pl.inpost.recruitmenttask.data.network.model.dto.ShipmentsResponseDto
+import pl.inpost.recruitmenttask.data.network.model.dto.CustomerDto
+import pl.inpost.recruitmenttask.data.network.model.dto.EventLogDto
+import pl.inpost.recruitmenttask.data.network.model.dto.OperationsDto
+import pl.inpost.recruitmenttask.data.network.model.dto.ShipmentDto
+import pl.inpost.recruitmenttask.data.network.model.dto.ShipmentStatusDto
+import pl.inpost.recruitmenttask.data.network.model.dto.ShipmentTypeDto
 import pl.inpost.recruitmenttask.domain.entities.*
 import pl.inpost.recruitmenttask.domain.repositories.ShipmentRepository
 import java.time.ZonedDateTime
 import kotlin.random.Random
 
-internal class MockShipmentApi(
+internal class ShipmentRepositoryMockImpl(
     @ApplicationContext private val context: Context,
     moshi: Moshi
 ) : ShipmentRepository {
@@ -21,16 +26,16 @@ internal class MockShipmentApi(
         val json = context.resources.openRawResource(R.raw.mock_shipment_api_response)
             .bufferedReader()
             .use { it.readText() }
-        moshi.adapter(ShipmentsResponse::class.java).fromJson(json) as ShipmentsResponse
+        moshi.adapter(ShipmentsResponseDto::class.java).fromJson(json) as ShipmentsResponseDto
     }
 
-    override suspend fun getShipments(): List<ShipmentNetwork> {
+    override suspend fun getShipments(): List<Shipment> {
         delay(1000)
         return response.shipments.map { it.toShipmentNetwork() }
     }
 
-    private fun ShipmentNetworkDto.toShipmentNetwork(): ShipmentNetwork {
-        return ShipmentNetwork(
+    private fun ShipmentDto.toShipmentNetwork(): Shipment {
+        return Shipment(
             number = number,
             shipmentType = shipmentType.toShipmentTypeDto(),
             status = status.toShipmentStatus(),
@@ -52,19 +57,19 @@ internal class MockShipmentApi(
         }
     }
 
-    private fun EventLogNetworkDto.toEventLogNetwork(): EventLogNetwork {
-        return EventLogNetwork(
+    private fun EventLogDto.toEventLogNetwork(): EventLog {
+        return EventLog(
             name = name,
             date = date
         )
     }
 
-    private fun CustomerNetworkDto.toCustomerNetwork(): CustomerNetwork {
-        return CustomerNetwork(email, phoneNumber, name)
+    private fun CustomerDto.toCustomerNetwork(): Customer {
+        return Customer(email, phoneNumber, name)
     }
 
-    private fun OperationsNetworkDto.toOperationsNetwork(): OperationsNetwork {
-        return OperationsNetwork(
+    private fun OperationsDto.toOperationsNetwork(): Operations {
+        return Operations(
             manualArchive = manualArchive,
             delete = delete,
             collect = collect,
@@ -98,15 +103,15 @@ private fun mockShipmentNetwork(
     number: String = Random.nextLong(1, 9999_9999_9999_9999).toString(),
     type: ShipmentType = ShipmentType.PARCEL_LOCKER,
     status: ShipmentStatus = ShipmentStatus.DELIVERED,
-    sender: CustomerNetwork? = mockCustomerNetwork(),
-    receiver: CustomerNetwork? = mockCustomerNetwork(),
-    operations: OperationsNetwork = mockOperationsNetwork(),
-    eventLog: List<EventLogNetwork> = emptyList(),
+    sender: Customer? = mockCustomerNetwork(),
+    receiver: Customer? = mockCustomerNetwork(),
+    operations: Operations = mockOperationsNetwork(),
+    eventLog: List<EventLog> = emptyList(),
     openCode: String? = null,
     expireDate: ZonedDateTime? = null,
     storedDate: ZonedDateTime? = null,
     pickupDate: ZonedDateTime? = null
-) = ShipmentNetwork(
+) = Shipment(
     number = number,
     shipmentType = type,
     status = status,
@@ -124,7 +129,7 @@ private fun mockCustomerNetwork(
     email: String = "name@email.com",
     phoneNumber: String = "123 123 123",
     name: String = "Jan Kowalski"
-) = CustomerNetwork(
+) = Customer(
     email = email,
     phoneNumber = phoneNumber,
     name = name
@@ -137,7 +142,7 @@ private fun mockOperationsNetwork(
     highlight: Boolean = false,
     expandAvizo: Boolean = false,
     endOfWeekCollection: Boolean = false
-) = OperationsNetwork(
+) = Operations(
     manualArchive = manualArchive,
     delete = delete,
     collect = collect,

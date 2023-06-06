@@ -46,7 +46,7 @@ class ShipmentListViewModel @Inject constructor(
      * Mappers: can be moved outside and made internal if needed in other classes,
      * in order to avoid code duplication (if it fits the feature).
      */
-    private fun ShipmentNetwork.toUiShipmentNetwork(): UiShipmentNetwork {
+    private fun Shipment.toUiShipmentNetwork(): UiShipmentNetwork {
         return UiShipmentNetwork(
             number = number,
             shipmentTypeIconRes = shipmentType.getShipmentTypeImageResId(),
@@ -69,18 +69,18 @@ class ShipmentListViewModel @Inject constructor(
         }
     }
 
-    private fun EventLogNetwork.toUiEventLogNetwork(): UiEventLogNetwork {
+    private fun EventLog.toUiEventLogNetwork(): UiEventLogNetwork {
         return UiEventLogNetwork(
             name = name,
             date = date
         )
     }
 
-    private fun CustomerNetwork.toUiCustomerNetwork(): UiCustomerNetwork {
+    private fun Customer.toUiCustomerNetwork(): UiCustomerNetwork {
         return UiCustomerNetwork(email, phoneNumber, name)
     }
 
-    private fun OperationsNetwork.toUiOperationsNetwork(): UiOperationsNetwork {
+    private fun Operations.toUiOperationsNetwork(): UiOperationsNetwork {
         return UiOperationsNetwork(
             manualArchive = manualArchive,
             delete = delete,

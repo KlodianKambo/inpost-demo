@@ -1,7 +1,7 @@
 package pl.inpost.recruitmenttask.domain.repositories
 
-import pl.inpost.recruitmenttask.domain.entities.ShipmentNetwork
+import pl.inpost.recruitmenttask.domain.entities.Shipment
 
 interface ShipmentRepository {
-    suspend fun getShipments(): List<ShipmentNetwork>
+    suspend fun getShipments(): List<Shipment>
 }
