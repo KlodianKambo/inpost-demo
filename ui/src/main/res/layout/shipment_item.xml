@@ -114,27 +114,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/size20"
-        app:layout_constraintEnd_toStartOf="@+id/more"
+        app:layout_constraintEnd_toStartOf="@+id/archive"
         app:layout_constraintStart_toStartOf="@+id/status_text"
         app:layout_constraintTop_toBottomOf="@+id/sender_text"
         tools:text="Gotowa do odbioru" />
 
-    <TextView
-        android:id="@+id/more"
-        style="@style/TextValue700"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/size6"
-        android:text="@string/more"
-        app:layout_constraintEnd_toStartOf="@+id/more_iv"
-        app:layout_constraintTop_toBottomOf="@+id/sender_text" />
-
     <ImageView
-        android:id="@+id/more_iv"
-        android:layout_width="@dimen/size20"
-        android:layout_height="@dimen/size20"
+        android:id="@+id/archive"
+        android:layout_width="@dimen/size24"
+        android:layout_height="@dimen/size24"
         android:layout_marginEnd="@dimen/size20"
-        android:src="@drawable/ic_arrow_yellow"
+        android:src="@drawable/baseline_archive_24"
         app:layout_constraintBottom_toBottomOf="@+id/sender_value"
         app:layout_constraintEnd_toEndOf="parent" />
 

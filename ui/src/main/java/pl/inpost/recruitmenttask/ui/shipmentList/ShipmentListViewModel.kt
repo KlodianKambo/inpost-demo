@@ -3,13 +3,14 @@ package pl.inpost.recruitmenttask.ui.shipmentList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.inpost.recruitmenttask.domain.entities.*
-import pl.inpost.recruitmenttask.domain.usecases.GetShipmentList
+import pl.inpost.recruitmenttask.domain.usecases.ArchiveShipment
+import pl.inpost.recruitmenttask.domain.usecases.FetchShipmentAndPersistIfEmpty
+import pl.inpost.recruitmenttask.domain.usecases.GetUnarchivedShipmentList
 import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.shipmentList.entities.*
 import java.text.SimpleDateFormat
@@ -18,29 +19,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShipmentListViewModel @Inject constructor(
-    private val getShipmentList: GetShipmentList
+    private val getUnarchivedShipmentList: GetUnarchivedShipmentList,
+    private val fetchShipmentAndPersistIfEmpty: FetchShipmentAndPersistIfEmpty,
+    private val archiveShipment: ArchiveShipment
 ) : ViewModel() {
 
     // TODO the day and the month are to be formatted based on the locale, e.g. for the US and EN
     private val dateFormatter = SimpleDateFormat("| dd.MM.yy | hh.mm", Locale.ROOT)
 
-    private val mutableViewState = MutableSharedFlow<List<UiShipmentNetwork>>(
-        replay = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-    val viewState: Flow<List<UiShipmentNetwork>> = mutableViewState
+    private val mutableViewState = getUnarchivedShipmentList()
 
-    init {
-        refreshData()
-    }
+    val viewState: Flow<List<UiShipmentNetwork>> =
+        mutableViewState.map { it.map { it.toUiShipmentNetwork() } }
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: Flow<Boolean> = _isLoading
     fun refreshData() {
-        viewModelScope.launch(Dispatchers.Main) {
-            val shipments = getShipmentList().map { it.toUiShipmentNetwork() }
-            mutableViewState.emit(shipments)
+        viewModelScope.launch {
+            _isLoading.tryEmit(true)
+            fetchShipmentAndPersistIfEmpty()
+            _isLoading.tryEmit(false)
         }
     }
 
+    fun archive(number: String) {
+        viewModelScope.launch { archiveShipment(number) }
+    }
 
     /**
      * Mappers: can be moved outside and made internal if needed in other classes,
