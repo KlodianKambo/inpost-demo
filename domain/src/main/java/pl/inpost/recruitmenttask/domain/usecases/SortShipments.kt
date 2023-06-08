@@ -12,9 +12,9 @@ internal class SortShipmentsUseCase @Inject constructor() : SortShipments {
     override operator fun invoke(sort: ShipmentSort, shipments: List<Shipment>): List<Shipment> {
         return when (sort) {
             ShipmentSort.Status -> shipments.sortedWith(statusComparator)
-            ShipmentSort.PickupDate -> shipments.sortedBy { it.pickUpDate }
-            ShipmentSort.ExpirationDate -> shipments.sortedBy { it.expiryDate }
-            ShipmentSort.StoredDate -> shipments.sortedBy { it.storedDate }
+            ShipmentSort.PickupDate -> shipments.sortedByDescending { it.pickUpDate }
+            ShipmentSort.ExpirationDate -> shipments.sortedByDescending { it.expiryDate }
+            ShipmentSort.StoredDate -> shipments.sortedByDescending { it.storedDate }
             ShipmentSort.Number -> shipments.sortedBy { it.number }
         }
     }
