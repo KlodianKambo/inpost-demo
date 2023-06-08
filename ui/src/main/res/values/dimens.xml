@@ -8,4 +8,5 @@
     <dimen name="size6">6dp</dimen>
     <dimen name="size24">24dp</dimen>
     <dimen name="size8">8dp</dimen>
+    <dimen name="size60">60dp</dimen>
 </resources>

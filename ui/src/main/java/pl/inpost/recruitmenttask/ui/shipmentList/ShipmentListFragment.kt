@@ -2,6 +2,7 @@ package pl.inpost.recruitmenttask.ui.shipmentList
 
 import android.os.Bundle
 import android.view.*
+import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import pl.inpost.recruitmenttask.ui.R
 import pl.inpost.recruitmenttask.ui.databinding.FragmentShipmentListBinding
 import pl.inpost.recruitmenttask.ui.shipmentList.adapter.ShipmentAdapter
 import pl.inpost.recruitmenttask.ui.shipmentList.adapter.ShipmentItemDecorator
+import pl.inpost.recruitmenttask.ui.shipmentList.adapter.SortingOptionAdapter
 
 @AndroidEntryPoint
 class ShipmentListFragment : Fragment() {
@@ -42,11 +44,8 @@ class ShipmentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.refreshData()
 
-        val adapter = ShipmentAdapter {
-            viewModel.archive(it.number)
-        }
+        val adapter = ShipmentAdapter { viewModel.archive(it.number) }
 
         lifecycleScope.launchWhenStarted {
             viewModel.viewState.collect { shipments ->
@@ -75,6 +74,29 @@ class ShipmentListFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             this.adapter = adapter
         }
+
+        binding?.sortingSpinner?.adapter =
+            SortingOptionAdapter(requireContext(), viewModel.sortingOptions)
+        binding?.sortingSpinner?.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (position in 0 until viewModel.sortingOptions.size) {
+                        viewModel.sort(viewModel.sortingOptions[position])
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do nothing
+                }
+            }
+
+        viewModel.refreshData()
+
     }
 
     override fun onDestroyView() {
