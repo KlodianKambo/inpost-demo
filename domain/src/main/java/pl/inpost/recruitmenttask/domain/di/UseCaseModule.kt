@@ -21,4 +21,9 @@ class UseCaseModule {
     @Provides
     internal fun provideUpdateShipment(impl: ArchiveShipmentUseCase): ArchiveShipment = impl
 
+    @Provides
+    internal fun provideGetSortingOptions(impl: GetSortingOptionsUseCase): GetSortingOptions = impl
+
+    @Provides
+    internal fun provideSortShipmentsUseCase(impl: SortShipmentsUseCase): SortShipments = impl
 }
