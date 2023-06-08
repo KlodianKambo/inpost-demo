@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size196"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/package_number_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size20"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/nr_przesy_ki"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/package_number_value"
+        style="@style/TextValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/package_number_text"
+        app:layout_constraintTop_toBottomOf="@+id/package_number_text"
+        tools:text="1234553459359043" />
+
+
+    <ImageView
+        android:id="@+id/delivery_status_iv"
+        android:layout_width="@dimen/size50"
+        android:layout_height="@dimen/size50"
+        android:layout_marginTop="@dimen/size16"
+        android:layout_marginEnd="@dimen/size20"
+        android:src="@drawable/ic_courrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Missing specifications for this feature
+   1. when it's displayed
+   2. what is pn for ?
+   3. what date is the value referring to ? expiryDate, storedDate or pickUpDate ?
+   hidden for now
+   start -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/delivery_status_iv"
+        app:layout_constraintTop_toTopOf="@+id/status_text">
+
+        <TextView
+            android:id="@+id/received_value"
+            style="@style/TextHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Order" />
+
+        <TextView
+            android:id="@+id/received_date_value"
+            style="@style/TextValue700"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/received_value"
+            app:layout_constraintTop_toBottomOf="@+id/received_value"
+            tools:text="Order" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- end -->
+
+    <TextView
+        android:id="@+id/status_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/status"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/package_number_value"
+        app:layout_constraintTop_toBottomOf="@+id/package_number_value" />
+
+    <TextView
+        android:id="@+id/status_value"
+        style="@style/TextValue700"
+        android:layout_width="0dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size8"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+        app:layout_constraintStart_toStartOf="@+id/status_text"
+        app:layout_constraintTop_toBottomOf="@+id/status_text"
+        tools:text="Gotowa do odbioru" />
+
+    <TextView
+        android:id="@+id/sender_text"
+        style="@style/TextHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size16"
+        android:text="@string/nadawca"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="@+id/status_value"
+        app:layout_constraintTop_toBottomOf="@+id/status_value" />
+
+    <TextView
+        android:id="@+id/sender_value"
+        style="@style/TextValue700"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size20"
+        app:layout_constraintEnd_toStartOf="@+id/archive"
+        app:layout_constraintStart_toStartOf="@+id/status_text"
+        app:layout_constraintTop_toBottomOf="@+id/sender_text"
+        tools:text="Gotowa do odbioru" />
+
+    <ImageView
+        android:id="@+id/archive"
+        android:layout_width="@dimen/size24"
+        android:layout_height="@dimen/size24"
+        android:layout_marginEnd="@dimen/size20"
+        android:src="@drawable/baseline_archive_24"
+        app:layout_constraintBottom_toBottomOf="@+id/sender_value"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
