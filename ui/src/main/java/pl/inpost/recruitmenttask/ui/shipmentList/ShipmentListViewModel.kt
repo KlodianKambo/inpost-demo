@@ -36,13 +36,14 @@ class ShipmentListViewModel @Inject constructor(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: Flow<Boolean> = _isLoading
-    val sortingOptions = getSortingOptions().map{ it.toUiSortingOption() }
+
+    private var selectedSorting = getSortingOptions().first()
+    val sortingOptions = getSortingOptions().map { it.toUiSortingOption() }
+
     init {
         viewModelScope.launch {
             getUnarchivedShipmentListFlow.collect {
-                mutableViewState.tryEmit(
-                    sortShipments(ShipmentSort.Status, it)
-                )
+                mutableViewState.tryEmit(sortShipments(selectedSorting, it))
             }
         }
     }
@@ -59,13 +60,10 @@ class ShipmentListViewModel @Inject constructor(
         viewModelScope.launch { archiveShipment(number) }
     }
 
-    fun sort(uiSortingOption: UiSortingOption){
+    fun sort(uiSortingOption: UiSortingOption) {
         viewModelScope.launch {
-            mutableViewState.value?.let {
-                mutableViewState.tryEmit(
-                    sortShipments(uiSortingOption.toShipmentSort(), it)
-                )
-            }
+            selectedSorting = uiSortingOption.toShipmentSort()
+            mutableViewState.tryEmit(sortShipments(selectedSorting, mutableViewState.value))
         }
     }
 
@@ -137,8 +135,8 @@ class ShipmentListViewModel @Inject constructor(
         }.nameRes
     }
 
-    private fun UiSortingOption.toShipmentSort(): ShipmentSort{
-        return when(this){
+    private fun UiSortingOption.toShipmentSort(): ShipmentSort {
+        return when (this) {
             UiSortingOption.ExpirationDate -> ShipmentSort.ExpirationDate
             UiSortingOption.Number -> ShipmentSort.Number
             UiSortingOption.PickupDate -> ShipmentSort.PickupDate
@@ -147,8 +145,8 @@ class ShipmentListViewModel @Inject constructor(
         }
     }
 
-    private fun ShipmentSort.toUiSortingOption(): UiSortingOption{
-        return when(this){
+    private fun ShipmentSort.toUiSortingOption(): UiSortingOption {
+        return when (this) {
             ShipmentSort.ExpirationDate -> UiSortingOption.ExpirationDate
             ShipmentSort.Number -> UiSortingOption.Number
             ShipmentSort.PickupDate -> UiSortingOption.PickupDate

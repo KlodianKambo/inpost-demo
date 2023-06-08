@@ -78,7 +78,7 @@ class SortShipmentsUseCaseTest {
 
         assertEquals(expected, result.map { it.number })
     }
-    
+
     /**
      * Order of statuses
      * 1. CREATED
